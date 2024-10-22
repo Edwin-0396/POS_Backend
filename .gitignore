@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+
+# Flask and Django cache
+instance/
+.webassets-cache
+
+# Docker
+*.log
+docker-compose.override.yml
+.dockerignore
+
+# Environment variables
+.env
+.flaskenv
+
+# Postgres data
+db_data/
+
+# VS Code files
+.vscode/
