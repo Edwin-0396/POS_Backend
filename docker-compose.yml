@@ -1,0 +1,38 @@
+version: '3'
+services:
+  db:
+    image: postgres:13
+    container_name: pos_db_container  # Explicit container name
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pos_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - pos_network
+
+  pos_web_app:
+    build: .
+    container_name: pos_web_container  # Explicit container name
+    command: flask run --host=0.0.0.0
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      FLASK_APP: app
+      FLASK_ENV: development
+      DATABASE_URL: postgresql+psycopg2://postgres:password@db:5432/pos_db
+    volumes:
+      - .:/app
+    networks:
+      - pos_network
+
+volumes:
+  db_data:
+
+networks:
+  pos_network:
