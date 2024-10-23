@@ -1,38 +1,48 @@
-version: '3'
-services:
-  db:
-    image: postgres:13
-    container_name: pos_db_container  # Explicit container name
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: pos_db
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"  # Map PostgreSQL port to 5433 on the host machine to avoid conflicts
-    networks:
-      - pos_network
+version: '3.8'
 
-  pos_web_app:
-    build: .
-    container_name: pos_web_container  # Explicit container name
+services:
+  web:
+    container_name: pos_backend
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: flask run --host=0.0.0.0
-    ports:
-      - "5000:5000"
-    depends_on:
-      - db
-    environment:
-      FLASK_APP: app
-      FLASK_ENV: development
-      DATABASE_URL: postgresql+psycopg2://postgres:password@db:5432/pos_db  # Using db service and default internal container port
     volumes:
       - .:/app
-    networks:
-      - pos_network
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - UPLOAD_FOLDER=/app/uploads
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres_db
+    image: postgres:13
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=pos_db
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
 
 volumes:
-  db_data:
-
-networks:
-  pos_network:
+  pgdata:
