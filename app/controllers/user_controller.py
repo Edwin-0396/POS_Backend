@@ -1,8 +1,20 @@
 from flask import request, jsonify
 from app.services.user_service import UserService
 from app.utils.jwt_utils import generate_token
+from app.models.user import User
+from werkzeug.security import check_password_hash
+from flask_jwt_extended import create_access_token
 
 class UserController:
+    def login():
+        data = request.get_json()
+        user = User.query.filter_by(email=data.get('email')).first()
+
+        if user and check_password_hash(user.password, data.get('password')):
+            access_token = create_access_token(identity=user.id)
+            return jsonify(access_token=access_token), 200
+        else:
+            return jsonify({"error": "Invalid credentials"}), 401
     
     def register_user(self):
         data = request.get_json()
