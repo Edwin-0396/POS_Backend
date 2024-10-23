@@ -10,7 +10,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"  # Map PostgreSQL port to 5433 on the host machine to avoid conflicts
     networks:
       - pos_network
 
@@ -25,7 +25,7 @@ services:
     environment:
       FLASK_APP: app
       FLASK_ENV: development
-      DATABASE_URL: postgresql+psycopg2://postgres:password@db:5432/pos_db
+      DATABASE_URL: postgresql+psycopg2://postgres:password@db:5432/pos_db  # Using db service and default internal container port
     volumes:
       - .:/app
     networks:

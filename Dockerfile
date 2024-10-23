@@ -1,20 +1,22 @@
-# Use the official Python image
-FROM python:3.9-slim
+FROM python:3.9
 
-# Set the working directory in the container
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libffi-dev \
+    libssl-dev \
+    build-essential \
+    python3-dev \
+    && apt-get clean
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the requirements file into the container
+# Copy and install requirements
 COPY requirements.txt requirements.txt
-
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container
+# Copy project files
 COPY . .
 
-# Expose the port Flask will run on
-EXPOSE 5000
-
-# Command to run Flask
+# Command to run Flask app
 CMD ["flask", "run", "--host=0.0.0.0"]

@@ -1,25 +1,24 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate  # Importar Flask-Migrate
+from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt  # Import Flask-Bcrypt
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()  # Load environment variables
 
-
-# Inicializar la app Flask
+# Initialize Flask app
 app = Flask(__name__)
 
+# Database setup
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-
-# Cargar la configuración desde config.py
 app.config.from_object('app.config.Config')
-
-# Inicializar la base de datos
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-# Inicializar Flask-Migrate
-migrate = Migrate(app, db)  # Añadir Flask-Migrate aquí
+# Initialize Flask-Bcrypt
+bcrypt = Bcrypt(app)
 
-# Importar rutas después de inicializar app y db para evitar importaciones circulares
-from app.routes import users, roles, routes, forms, form_responses, geolocations, statistics
+# Import and register routes
+from app.routes.users import users_bp
+app.register_blueprint(users_bp, url_prefix='/')

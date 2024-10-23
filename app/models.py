@@ -1,12 +1,16 @@
 from app import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 class User(db.Model):
-    id_user = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    email = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
-    phone = db.Column(db.String(15))
-    role = db.Column(db.String(20))  # 'Administrator', 'Supervisor', 'Salesperson'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self):
+        return f'<User {self.username}>'
+
 
 class Role(db.Model):
     id_role = db.Column(db.Integer, primary_key=True)
