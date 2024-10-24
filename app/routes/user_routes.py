@@ -1,5 +1,6 @@
 from flask import Blueprint
 from app.controllers.user_controller import UserController
+from app.controllers.login_controller import login
 
 user_routes = Blueprint('user_routes', __name__)
 
@@ -14,3 +15,7 @@ def login():
 @user_routes.route('/users/<int:id_usuario>', methods=['GET'])
 def get_user(id_usuario):
     return UserController.get_user(id_usuario)
+
+@user_routes.route('/login', methods=['POST'])
+def login_route():
+    return login()

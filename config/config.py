@@ -1,42 +1,23 @@
 import os
 
 class Config:
-    """Base configuration."""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key-here'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'your-jwt-secret-key-here'
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB limit for file uploads
-
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB limit
 
 class DevelopmentConfig(Config):
-    """Development configuration."""
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'postgresql://username:password@localhost:5432/pos_dev_db'
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
-
-class TestingConfig(Config):
-    """Testing configuration."""
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'postgresql://username:password@localhost:5432/pos_test_db'
-    WTF_CSRF_ENABLED = False  # Disable CSRF for testing purposes
-
+class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL')
 
 class ProductionConfig(Config):
-    """Production configuration."""
-    DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'postgresql://username:password@localhost:5432/pos_prod_db'
-
-    # Configure production-specific settings
-    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT') or True
-
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 config = {
     'development': DevelopmentConfig,
-    'testing': TestingConfig,
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }

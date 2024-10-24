@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from app.models.user import User
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from flask_jwt_extended import create_access_token
 
 class UserController:
@@ -17,7 +17,7 @@ class UserController:
     def login_user():
         data = request.get_json()
         user = User.query.filter_by(email=data['email']).first()
-        if user and check_password_hash(user.password, data['password']):
+        if user and user.check_password(data['password']):
             access_token = create_access_token(identity=user.id)
             return jsonify(access_token=access_token), 200
         return jsonify({"error": "Invalid credentials"}), 401
