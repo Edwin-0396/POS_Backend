@@ -1,5 +1,9 @@
+from dotenv import load_dotenv
 import os
 
+load_dotenv()  # This will load the .env file
+
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'postgresql://POS_Username:POS_password@localhost:5432/pos_db'
+    SECRET_KEY = os.getenv('SECRET_KEY', 'mysecret')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://pos_user:pos_password@localhost/pos_db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
