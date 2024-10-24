@@ -1,9 +1,7 @@
-Flask==2.1.2
-Flask-SQLAlchemy==2.5.1
-psycopg2-binary==2.9.3
-Flask-JWT-Extended==4.4.3
-alembic==1.6.5
-werkzeug==2.0.0
-flask-migrate==3.1.0  # Pin this to a specific version
-SQLAlchemy==1.4.47
-python-dotenv==0.19.2  # Keep one entry for python-dotenv
+Flask
+Flask-SQLAlchemy
+psycopg2-binary
+Werkzeug
+Flask-Migrate
+python-dotenv
+gunicorn
