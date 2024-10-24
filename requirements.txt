@@ -1,7 +1,5 @@
 Flask
 Flask-SQLAlchemy
-psycopg2-binary
+psycopg2
 Werkzeug
-Flask-Migrate
-python-dotenv
 gunicorn
