@@ -1,18 +1,19 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_jwt_extended import JWTManager
-from dotenv import load_dotenv
-load_dotenv()
+from .config import config  # Import the config object directly
 
+db = SQLAlchemy()
+migrate = Migrate()
 
-app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Replace with your secret key
-jwt = JWTManager(app)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(config)  # Load the simplified config directly
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-# Register blueprints
-from app.routes.user_routes import user_routes
-app.register_blueprint(user_routes)
+    # Import the models only after the app and db are initialized
+    from app.models.user import User
+
+    return app
